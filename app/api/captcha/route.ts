@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { generateMathCaptcha } from "@/lib/security"
+export const runtime = "nodejs"
 
 export async function GET() {
   try {
@@ -11,12 +12,20 @@ export async function GET() {
     })
 
     // Store answer in secure cookie for verification
-    response.cookies.set("captcha-answer", captcha.answer.toString(), {
+    /*response.cookies.set("captcha-answer", captcha.answer.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 5 * 60, // 5 minutes
-    })
+    })*/
+   response.cookies.set("captcha-answer", captcha.answer.toString(), {
+  httpOnly: true,
+  secure: true, // Always true in production, Vercel uses HTTPS
+  sameSite: "lax", // More compatible than "strict"
+  path: "/",       // Explicitly set cookie path
+  maxAge: 5 * 60,
+})
+
 
     return response
   } catch (error) {
