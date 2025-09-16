@@ -1,0 +1,135 @@
+-- Create database and collections for Community Connect platform
+
+-- Users collection structure
+-- {
+--   _id: ObjectId,
+--   firstName: String,
+--   lastName: String,
+--   email: String (unique),
+--   password: String (hashed),
+--   avatar: String (URL),
+--   location: String,
+--   joinDate: Date,
+--   isActive: Boolean,
+--   communityScore: Number,
+--   preferences: {
+--     notifications: {
+--       email: Boolean,
+--       push: Boolean,
+--       helpRequests: Boolean,
+--       events: Boolean,
+--       messages: Boolean
+--     }
+--   }
+-- }
+
+-- Help Posts collection structure
+-- {
+--   _id: ObjectId,
+--   title: String,
+--   description: String,
+--   category: String,
+--   location: String,
+--   timeframe: String,
+--   contactInfo: String,
+--   isUrgent: Boolean,
+--   hasCompensation: Boolean,
+--   isRecurring: Boolean,
+--   authorId: ObjectId (ref: Users),
+--   status: String (enum: 'active', 'in_progress', 'completed', 'cancelled'),
+--   createdAt: Date,
+--   updatedAt: Date,
+--   likes: [ObjectId] (refs: Users),
+--   comments: [{
+--     authorId: ObjectId (ref: Users),
+--     content: String,
+--     createdAt: Date
+--   }]
+-- }
+
+-- Events collection structure
+-- {
+--   _id: ObjectId,
+--   title: String,
+--   description: String,
+--   category: String,
+--   organizerId: ObjectId (ref: Users),
+--   date: Date,
+--   startTime: String,
+--   endTime: String,
+--   location: String,
+--   maxAttendees: Number,
+--   attendees: [ObjectId] (refs: Users),
+--   status: String (enum: 'upcoming', 'ongoing', 'completed', 'cancelled'),
+--   createdAt: Date,
+--   updatedAt: Date
+-- }
+
+-- Messages collection structure
+-- {
+--   _id: ObjectId,
+--   conversationId: ObjectId,
+--   senderId: ObjectId (ref: Users),
+--   content: String,
+--   messageType: String (enum: 'text', 'image', 'file'),
+--   isRead: Boolean,
+--   createdAt: Date
+-- }
+
+-- Conversations collection structure
+-- {
+--   _id: ObjectId,
+--   participants: [ObjectId] (refs: Users),
+--   isGroup: Boolean,
+--   groupName: String (optional),
+--   lastMessage: {
+--     content: String,
+--     senderId: ObjectId,
+--     timestamp: Date
+--   },
+--   createdAt: Date,
+--   updatedAt: Date
+-- }
+
+-- Forum Posts collection structure
+-- {
+--   _id: ObjectId,
+--   title: String,
+--   content: String,
+--   category: String,
+--   authorId: ObjectId (ref: Users),
+--   isPinned: Boolean,
+--   likes: [ObjectId] (refs: Users),
+--   replies: [{
+--     authorId: ObjectId (ref: Users),
+--     content: String,
+--     createdAt: Date,
+--     likes: [ObjectId] (refs: Users)
+--   }],
+--   createdAt: Date,
+--   updatedAt: Date
+-- }
+
+-- Notifications collection structure
+-- {
+--   _id: ObjectId,
+--   userId: ObjectId (ref: Users),
+--   type: String (enum: 'help_request', 'event_reminder', 'message', 'forum_reply', 'event_update'),
+--   title: String,
+--   content: String,
+--   relatedId: ObjectId (ref to related document),
+--   isRead: Boolean,
+--   createdAt: Date
+-- }
+
+-- Create indexes for better performance
+-- db.users.createIndex({ "email": 1 }, { unique: true })
+-- db.helpPosts.createIndex({ "authorId": 1 })
+-- db.helpPosts.createIndex({ "category": 1 })
+-- db.helpPosts.createIndex({ "createdAt": -1 })
+-- db.events.createIndex({ "organizerId": 1 })
+-- db.events.createIndex({ "date": 1 })
+-- db.messages.createIndex({ "conversationId": 1, "createdAt": -1 })
+-- db.forumPosts.createIndex({ "category": 1 })
+-- db.forumPosts.createIndex({ "createdAt": -1 })
+-- db.notifications.createIndex({ "userId": 1, "isRead": 1 })
