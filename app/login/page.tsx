@@ -76,7 +76,7 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/auth/login", {
+      /*const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,21 @@ export default function LoginPage() {
           captchaAnswer: Number.parseInt(formData.captchaAnswer),
           captchaToken: captcha.token,
         }),
-      })
+      })*/
+     const response = await fetch("/api/auth/login", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  credentials: "include", // ✅ ensure cookies are sent
+  body: JSON.stringify({
+    email: formData.email,
+    password: formData.password,
+    captchaAnswer: Number.parseInt(formData.captchaAnswer),
+    captchaToken: captcha.token,
+  }),
+})
+
 
       const data = await response.json()
 
